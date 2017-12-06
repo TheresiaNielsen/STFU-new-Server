@@ -138,6 +138,7 @@ public class EventEndpoint {
             event.setIdEvent(Integer.parseInt(eventId));
             if (eventController.deleteEvent(event, currentStudent)) {
 
+
                 String json = new Gson().toJson(event);
                 String crypted = Crypter.encryptDecrypt(json);
 

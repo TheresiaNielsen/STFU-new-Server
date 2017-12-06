@@ -5,6 +5,7 @@ import server.controllers.TokenController;
 import server.models.Student;
 import server.providers.StudentTable;
 import server.resources.Log;
+import server.models.Token;
 import server.utility.Authenticator;
 import server.utility.Crypter;
 import server.utility.CurrentStudentContext;
@@ -62,16 +63,20 @@ public class LoginEndpoint {
 
             if (doHash.equals(foundStudent.getPassword())) {
                 //sets the token for the student
-                tokenController.setToken(foundStudent);
+                String newToken = tokenController.setToken(foundStudent);
+                Token theNewToken = new Token();
+                theNewToken.setToken(newToken);
+                foundStudent.setToken(theNewToken);
 
-                String json = new Gson().toJson(foundStudent);
+
+                String json = new Gson().toJson(newToken);
                 String crypted = Crypter.encryptDecrypt(json);
 
                 Log.writeLog(getClass().getName(), this, "Logged in", 0);
                 return Response
                         .status(200)
                         .type("application/json")
-                        .entity(new Gson().toJson(crypted))
+                        .entity(crypted)
                         .build();
             } else {
                 Log.writeLog(getClass().getName(), this, "Password incorect", 2);
