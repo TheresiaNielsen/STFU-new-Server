@@ -21,6 +21,7 @@ public class StudentEndpoint {
 
     private StudentController studentController = new StudentController();
     private TokenController tokenController = new TokenController();
+    private Gson gson = new Gson();
 
     /**
      *
@@ -44,6 +45,7 @@ public class StudentEndpoint {
                         .entity("You're not allowed to view this persons events. You can only view your own events.")
                         .build();
             } else {
+                // Skal <Event> slettes ??
                 ArrayList<Event> foundAttendingEvents;
                 foundAttendingEvents = studentController.getAttendingEvents(idStudent);
                 // if event not found
@@ -55,13 +57,15 @@ public class StudentEndpoint {
                             .entity("You are not attending any events")
                             .build();
                 } else {
-                    String json = new Gson().toJson(foundAttendingEvents);
-                    String crypted = Crypter.encryptDecrypt(json);
+                    String json = gson.toJson(foundAttendingEvents);
+                    // Slet! String json = new Gson().toJson(foundAttendingEvents);
+                    // Slet! String crypted = Crypter.encryptDecrypt(json);
                     Log.writeLog(getClass().getName(), this, "Attending events fetched", 0);
                     return Response
                             .status(200)
                             .type("application/json")
-                            .entity(new Gson().toJson(crypted))
+                            .entity(Crypter.encrypt(json))
+                            // Slet! .entity(new Gson().toJson(crypted))
                             .build();
                 }
             }
@@ -121,14 +125,17 @@ public class StudentEndpoint {
 
         CurrentStudentContext student = tokenController.getStudentFromTokens(token);
         Student currentStudent = student.getCurrentStudent();
+
         if (currentStudent != null) {
-            String json = new Gson().toJson(currentStudent);
-            String crypted = Crypter.encryptDecrypt(json);
+            String json = gson.toJson(currentStudent);
+            // Slet! String json = new Gson().toJson(currentStudent);
+            // Slet! String crypted = Crypter.encryptDecrypt(json);
             Log.writeLog(getClass().getName(), this, "Current student found: " + currentStudent, 0);
             return Response
                     .status(200)
                     .type("application/json")
-                    .entity(new Gson().toJson(crypted))
+                    .entity(Crypter.encrypt(json))
+                    // Slet! .entity(new Gson().toJson(crypted))
                     .build();
         } else {
             Log.writeLog(getClass().getName(), this, "Current student not found - 403", 2);

@@ -22,6 +22,7 @@ public class LoginEndpoint {
     private StudentTable studentTable = new StudentTable();
     private TokenController tokenController = new TokenController();
     private Gson gson = new Gson();
+    private Crypter crypter = new Crypter();
 
     /**
      *
@@ -32,6 +33,9 @@ public class LoginEndpoint {
      */
     @POST
     public Response login(@HeaderParam("Authorization") String token, String jsonLogin) throws Exception {
+
+        jsonLogin = new Gson().fromJson(jsonLogin, String.class);
+        jsonLogin = crypter.decrypt(jsonLogin);
 
         CurrentStudentContext student = tokenController.getStudentFromTokens(token);
         Student currentStudent = student.getCurrentStudent();
@@ -63,23 +67,32 @@ public class LoginEndpoint {
 
             if (doHash.equals(foundStudent.getPassword())) {
                 //sets the token for the student
-                String newToken = tokenController.setToken(foundStudent);
-                Token theNewToken = new Token();
-                theNewToken.setToken(newToken);
-                foundStudent.setToken(theNewToken);
+
+                String _token = tokenController.setToken(foundStudent);
+                Token newToken = new Token();
+                newToken.setToken(_token);
+                foundStudent.setToken(newToken);
+
+                String tokenJson = gson.toJson(_token);
+
+                // Slet! String newToken = tokenController.setToken(foundStudent);
+                // Slet! Token theNewToken = new Token();
+                // Slet! theNewToken.setToken(newToken);
+                // Slet! foundStudent.setToken(theNewToken);
 
 
-                String json = new Gson().toJson(newToken);
-                String crypted = Crypter.encryptDecrypt(json);
+
+                // Slet! String json = new Gson().toJson(newToken);
+                // Slet! String crypted = Crypter.encryptDecrypt(json);
 
                 Log.writeLog(getClass().getName(), this, "Logged in", 0);
                 return Response
                         .status(200)
                         .type("application/json")
-                        .entity(crypted)
+                        .entity(Crypter.encrypt(tokenJson))
                         .build();
             } else {
-                Log.writeLog(getClass().getName(), this, "Password incorect", 2);
+                Log.writeLog(getClass().getName(), this, "Password incorrect", 2);
                 return Response
                         .status(403)
                         .type("plain/text")
