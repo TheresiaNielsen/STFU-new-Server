@@ -79,15 +79,12 @@ public class RegisterEndpoint {
                 studentTable.addStudent(registerStudent);
 
                 String registerJson = gson.toJson(registerStudent);
-                // Slet! String json = new Gson().toJson(registerStudent);
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
 
                 Log.writeLog(getClass().getName(), this, registerStudent + " registered", 0);
                 return Response
                         .status(200)
                         .type("application/json")
                         .entity(Crypter.encrypt(registerJson))
-                        // Slet! .entity(new Gson().toJson(crypted))
                         .build();
 
             } catch (SQLException e) {
