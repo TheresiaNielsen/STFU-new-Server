@@ -98,6 +98,7 @@ public class LoginEndpoint {
                         .type("plain/text")
                         .entity("Password not correct")
                         .build();
+
             }
         }
     }
