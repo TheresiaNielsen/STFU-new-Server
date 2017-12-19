@@ -75,15 +75,7 @@ public class LoginEndpoint {
 
                 String tokenJson = gson.toJson(_token);
 
-                // Slet! String newToken = tokenController.setToken(foundStudent);
-                // Slet! Token theNewToken = new Token();
-                // Slet! theNewToken.setToken(newToken);
-                // Slet! foundStudent.setToken(theNewToken);
 
-
-
-                // Slet! String json = new Gson().toJson(newToken);
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
 
                 Log.writeLog(getClass().getName(), this, "Logged in", 0);
                 return Response

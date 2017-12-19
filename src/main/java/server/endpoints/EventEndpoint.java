@@ -45,13 +45,13 @@ public class EventEndpoint {
         Student currentStudent = student.getCurrentStudent();
         if (currentStudent != null) {
 
-           // Slet! Gson gson = new Gson();
+
             Event event = gson.fromJson(data, Event.class);
             event.setIdEvent(eventId);
 
             if (eventController.updateEvent(event, currentStudent)) {
                 String json = gson.toJson(event) ;
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
+
 
                 Log.writeLog(getClass().getName(), this, "Event was updated", 0);
 
@@ -59,7 +59,6 @@ public class EventEndpoint {
                         .status(200)
                         .type("application/json")
                         .entity(Crypter.encrypt(json))
-                        // Slet! .entity(new Gson().toJson(crypted))
                         .build();
 
             } else {
@@ -103,14 +102,12 @@ public class EventEndpoint {
                 Log.writeLog(getClass().getName(), this, "Event created", 0);
 
                 String json = gson.toJson(event);
-                // Slet! String json = new Gson().toJson(event);
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
+
 
                 return Response
                         .status(200)
                         .type("application/json")
                         .entity(Crypter.encrypt(json))
-                        // Slet! .entity(new Gson().toJson(crypted))
                         .build();
             } else {
                 Log.writeLog(getClass().getName(), this, "Not able to create event", 2);
@@ -153,15 +150,13 @@ public class EventEndpoint {
 
 
                 String json = gson.toJson(event);
-                // Slet! String json = new Gson().toJson(event);
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
+
 
                 Log.writeLog(getClass().getName(), this, "Event deleted", 0);
                 return Response
                         .status(200)
                         .type("application/json")
                         .entity(Crypter.encrypt(json))
-                        // Slet! .entity(new Gson().toJson(crypted))
                         .build();
             } else {
                 Log.writeLog(getClass().getName(), this, "Event not deleted", 2);
@@ -193,13 +188,12 @@ public class EventEndpoint {
 
         if (currentStudent != null) {
                 String json = gson.toJson(eventController.getAllEvents());
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
+
                 Log.writeLog(getClass().getName(), this, "All events fetched", 0);
                 return Response
                         .status(200)
                         .type("application/json")
                         .entity(Crypter.encrypt(json))
-                        // Slet! .entity(new Gson().toJson(crypted))
                         .build();
         } else {
             return Response
@@ -225,7 +219,7 @@ public class EventEndpoint {
         CurrentStudentContext student = tokenController.getStudentFromTokens(token);
         Student currentStudent = student.getCurrentStudent();
         if (currentStudent != null) {
-            // Slet! - skal <Student> slettes?
+
             ArrayList<Student> foundAttendingStudents;
 
             if (idEvent.isEmpty()) {
@@ -246,8 +240,7 @@ public class EventEndpoint {
                             .entity("No attending students")
                             .build();
                 } else {
-                    // Slet! String json = new Gson().toJson(foundAttendingStudents);
-                    // Slet! String crypted = Crypter.encryptDecrypt(json);
+
                     String json = gson.toJson(foundAttendingStudents);
 
                     Log.writeLog(getClass().getName(), this, "Attending students fetched", 0);
@@ -255,7 +248,6 @@ public class EventEndpoint {
                             .status(200)
                             .type("application/json")
                             .entity(Crypter.encrypt(json))
-                            // Slet! .entity(new Gson().toJson(crypted))
                             .build();
                 }
             }
@@ -291,15 +283,12 @@ public class EventEndpoint {
                 eventController.joinEvent(event.getIdEvent(), currentStudent.getIdStudent());
                 String json = gson.toJson(event);
 
-                // Slet! String json = new Gson().toJson(event);
-                // Slet! String crypted = Crypter.encryptDecrypt(json);
 
                 Log.writeLog(getClass().getName(), this, "Event joined", 0);
                 return Response
                         .status(200)
                         .type("application/json")
                         .entity(Crypter.encrypt(json))
-                        // Slet! .entity(new Gson().toJson(crypted))
                         .build();
 
         } else {
